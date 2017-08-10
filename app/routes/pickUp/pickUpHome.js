@@ -8,18 +8,25 @@ import common from './../../config/common.js';
 import TripOverview from './../../components/tripOverview/tripOverview.js';
 import Drawers from './../../components/SideMenu/Drawer.js';
 
+import { connect } from  'react-redux';
+import {bindActionCreators} from 'redux';
+
+/* Actions */
+import { getAllAvailableShipmentRequest, selectShipment } from './../../actions/shipments';
 
 let self;
 let window = Dimensions.get("window");
 
 
 
-export default class PickUpHome extends Component {
+class PickUpHome extends Component {
   //************************************** Constructor start*****************************//
   constructor(props){
     super(props);
     self= this;
-    let tripData = [{
+    /* Lets keep this data for UI purpose */
+    let tripData = [
+        {
       source : 'Los Angeles, California',
       startDate : 'Aug 1, 2017  •  12:00 am - 4:00 am (pt)',
       destination : 'Las Vegas, Nevada',
@@ -41,12 +48,87 @@ export default class PickUpHome extends Component {
       priceValue : '$2000',
       distanceKey : 'DISTANCE',
       distanceValue : '600mi'
-    }]
+    },
+        {
+            source : 'Los Angeles, California',
+            startDate : 'Aug 1, 2017  •  12:00 am - 4:00 am (pt)',
+            destination : 'Las Vegas, Nevada',
+            endDate : 'Aug 2, 2017  •  7:00 pm - 9:00 pm (pt)',
+            deadheadKey : 'DEADHEAD',
+            deadheadValue : '20mi',
+            priceKey : 'PRICE',
+            priceValue : '$2000',
+            distanceKey : 'DISTANCE',
+            distanceValue : '600mi'
+        },{
+            source : 'Los Angeles, California',
+            startDate : 'Aug 1, 2017  •  12:00 am - 4:00 am (pt)',
+            destination : 'Las Vegas, Nevada',
+            endDate : 'Aug 2, 2017  •  7:00 pm - 9:00 pm (pt)',
+            deadheadKey : 'DEADHEAD',
+            deadheadValue : '20mi',
+            priceKey : 'PRICE',
+            priceValue : '$2000',
+            distanceKey : 'DISTANCE',
+            distanceValue : '600mi'
+        }
+    ]
     this.state = {
       tripData : tripData,
-      isOpen: false
-    }
+      isOpen: false,
+        pagination: {
+          limit: 5,
+          skip: 0
+        },
+        isLoadingMore: false
+    };
+
+    this.onScroll = this.onScroll.bind(this);
+    this.updatePagination = this.updatePagination.bind(this);
+    this.loadShipments = this.loadShipments.bind(this);
+    this.selectShipment = this.selectShipment.bind(this);
+
   }
+
+  async componentWillMount(){
+    await this.loadShipments(this.state.pagination.limit, this.state.pagination.skip);
+  }
+
+  async loadShipments(limit = this.state.pagination.limit, skip = this.state.pagination.skip){
+      let query = { limit, skip };
+      this.setState({isLoadingMore: true});
+      let response = await this.props.actions.getAllAvailableShipmentRequest(query);
+      if(response){
+          this.updatePagination(limit, skip + limit);
+      }
+      this.setState({isLoadingMore: false});
+  }
+
+  updatePagination(limit, skip){
+      this.setState({
+          pagination: {
+              limit: limit,
+              skip: skip
+          }
+      })
+  }
+
+    onScroll(e){
+        if(!this.state.isLoadingMore && !(this.props.shipments.Shipment.length >= this.props.shipments.count)){
+            let windowHeight = Dimensions.get('window').height,
+            height = e.nativeEvent.contentSize.height,
+            offset = e.nativeEvent.contentOffset.y;
+            if( windowHeight + offset >= height ){
+                this.loadShipments(this.state.pagination.limit, this.state.pagination.skip)
+                    .then(function(){})
+            }
+        }
+    }
+
+    selectShipment(shipment){
+        this.props.actions.selectShipment(shipment);
+        this.props.navigation.navigate('TripDetails');
+    }
 
   render(){
     const { navigate, goBack, state } = this.props.navigation;
@@ -62,7 +144,7 @@ export default class PickUpHome extends Component {
               source={images.Hamburger}
             />
           </TouchableHighlight>
-            <Text style={[commonStyle.fontSize_20,{color : common.whiteColor,fontWeight :'500',lineHeight:20,marginTop :39}]}>Results</Text>
+            {/*<Text style={[commonStyle.fontSize_20,{color : common.whiteColor,fontWeight :'500',lineHeight:20,marginTop :39}]}>Results</Text>*/}
           </View>
           <View style={[{flex:1, marginTop : 24,marginRight : 24,flexDirection : 'row'},commonStyle.contentRight]}>
           <Text style={[commonStyle.fontSize_20,{color : common.greenColor,fontWeight :'500',lineHeight:20,marginRight: 15}]}>Up-to-date</Text>
@@ -93,15 +175,23 @@ export default class PickUpHome extends Component {
       </View>
 
           <View style={{height : window.height - 190,marginTop :0}}>
-          <ScrollView contentContainerStyle={[{paddingBottom : 15,paddingTop :5}]}>
-            {
-              tripData.map((trip, key) => {
-                return(
-                  <TripOverview key={key} trip = {trip} onPress={() => navigate('TripDetails')}/>
-                )
+          <ScrollView contentContainerStyle={[{paddingBottom : 15,paddingTop :5}]} onScroll={this.onScroll}>
+              {/*{
+                  this.props.shipments.Shipment.map((trip, key) => {
+                      return(
+                          <TripOverview key={key} trip = {trip} onPress={() => this.selectShipment(trip)}/>
+                      )
 
-              })
-            }
+                  })
+              }*/}
+               {
+                  tripData.map((trip, key) => {
+                      return(
+                          <TripOverview key={key} trip = {trip} onPress={() => this.selectShipment(trip)}/>
+                      )
+
+                  })
+              }
 
           </ScrollView>
           </View>
@@ -112,3 +202,23 @@ export default class PickUpHome extends Component {
   }
   //************************************** Render end*****************************//
 };
+
+/* Map state to props */
+function mapStateToProps(state){
+    return {
+        shipments: state.shipments,
+    }
+}
+
+/* Map Actions to Props */
+function mapDispatchToProps(dispatch) {
+    return {
+        actions: bindActionCreators({
+            getAllAvailableShipmentRequest,
+            selectShipment
+        }, dispatch)
+    };
+}
+
+/* Connect Component with Redux */
+export default connect(mapStateToProps, mapDispatchToProps)(PickUpHome)

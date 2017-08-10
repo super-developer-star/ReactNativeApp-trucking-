@@ -5,7 +5,7 @@ import {
   Image
 } from 'react-native';
 import { Col, Grid } from "react-native-easy-grid";
-import { FontAwesome } from '@expo/vector-icons';
+// import { FontAwesome } from '@expo/vector-icons';
 import styles from './styles';
 import LocationAndTime from './../LocationAndTime/LocationAndTime';
 import images from '../../../config/images.js';

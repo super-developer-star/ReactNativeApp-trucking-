@@ -58,12 +58,12 @@ export default class TripOverview extends Component {
         </View>
         <View>
           <View>
-            <Text style={[commonStyle.fontSize_18,{marginTop :3}]}>{trip.source}</Text>
-            <Text style={[commonStyle.fontSize_14,{fontWeight : 'normal', color : '#58595B'}]}>{trip.startDate}</Text>
+            <Text style={[commonStyle.fontSize_18,{marginTop :3}]}>{trip.pickupCity + ', ' + trip.pickupState}</Text>
+            <Text style={[commonStyle.fontSize_14,{fontWeight : 'normal', color : '#58595B'}]}>{new Date(trip.pickupDateTimeFrom).toLocaleString()}</Text>
           </View>
           <View style={{marginTop :15}}>
-            <Text style={[commonStyle.fontSize_18,{marginTop :3}]}>{trip.destination}</Text>
-            <Text style={[commonStyle.fontSize_14,{fontWeight : 'normal', color : '#58595B'}]}>{trip.endDate}</Text>
+            <Text style={[commonStyle.fontSize_18,{marginTop :3}]}>{trip.deliveryCity + ', ' + trip.deliveryState}</Text>
+            <Text style={[commonStyle.fontSize_14,{fontWeight : 'normal', color : '#58595B'}]}>{new Date(trip.deliveryDateTimeTo).toLocaleString()}</Text>
           </View>
         </View>
       </View>
@@ -71,16 +71,16 @@ export default class TripOverview extends Component {
       <View style={{marginTop : 20,borderTopWidth : 1, borderTopColor : common.grayColor}}>
         <View style={{flexDirection : 'row',marginTop :15,paddingLeft : 20}}>
             <View style={{flex:1}}>
-              <Text style={[commonStyle.fontSize_12]}>{trip.deadheadKey}</Text>
-              <Text style={[commonStyle.fontSize_14,{fontWeight : 'normal', color : '#58595B'}]}>{trip.deadheadValue}</Text>
+              <Text style={[commonStyle.fontSize_12]}>{'DEADHEAD'}</Text>
+              <Text style={[commonStyle.fontSize_14,{fontWeight : 'normal', color : '#58595B'}]}>{trip.deadhead || 0}</Text>
             </View>
             <View style={{flex:1}}>
-            <Text style={[commonStyle.fontSize_12,]}>{trip.priceKey}</Text>
-            <Text style={[commonStyle.fontSize_14,{fontWeight : 'normal', color : '#58595B'}]}>{trip.priceValue}</Text>
+            <Text style={[commonStyle.fontSize_12,]}>{'PRICE'}</Text>
+            <Text style={[commonStyle.fontSize_14,{fontWeight : 'normal', color : '#58595B'}]}>{trip.lowPrice}</Text>
             </View>
             <View style={{flex:1}}>
-            <Text style={[commonStyle.fontSize_12]}>{trip.distanceKey}</Text>
-            <Text style={[commonStyle.fontSize_14,{fontWeight : 'normal', color : '#58595B'}]}>{trip.distanceValue}</Text>
+            <Text style={[commonStyle.fontSize_12]}>{'DISTANCE'}</Text>
+            <Text style={[commonStyle.fontSize_14,{fontWeight : 'normal', color : '#58595B'}]}>{trip.distance + 'mi'}</Text>
             </View>
         </View>
       </View>

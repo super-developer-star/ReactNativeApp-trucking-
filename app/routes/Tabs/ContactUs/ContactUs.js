@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 
 let window = Dimensions.get("window");
-import { FontAwesome } from '@expo/vector-icons';
+// import { FontAwesome } from '@expo/vector-icons';
 
 import commonStyle from './../../../config/commonStyle.js';
 import images from './../../../config/images.js';

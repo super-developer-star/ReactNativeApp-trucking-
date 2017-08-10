@@ -72,7 +72,7 @@ import UpComingLoad from './../../routes/trip/upComingLoad.js';
     PastShipment: { screen: PastShipment },
     DocScan: { screen: DocScan },
     DocScanned: { screen : DocScanned },
-    DocType: { screen: DocType }
+    DocType: { screen: DocType },
     SetAppointment: { screen: SetAppointment },
     UpComingLoad: { screen: UpComingLoad },
   }

@@ -6,7 +6,7 @@ import commonStyle from './../../config/commonStyle.js';
 import common from './../../config/common.js';
 import TripOverviewFullView from './../../components/tripOverviewFullView/tripOverviewFullView.js';
 import MessageView from './../../components/messageView/messageView.js';
-import { Components } from 'expo';
+// import { Components } from 'expo';
 import { Col, Grid } from "react-native-easy-grid";
 
 let self;
@@ -90,7 +90,7 @@ export default class UpComingLoad extends Component {
                 source={images.dotted_line}
                 style={styles.dotted_line}
               />
-            
+
               <Image
                 source={images.dotted_line}
                 style={styles.dotted_line}

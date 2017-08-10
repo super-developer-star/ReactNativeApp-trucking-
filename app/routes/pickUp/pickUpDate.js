@@ -6,19 +6,33 @@ import commonStyle from './../../config/commonStyle.js';
 import common from './../../config/common.js';
 import { Calendar, CalendarList, Agenda } from 'react-native-calendars';
 
+import { connect } from  'react-redux';
+import {bindActionCreators} from 'redux';
+
+/* Actions */
+import { setShipmentSearchQuery } from './../../actions/shipments';
+
+
 let self;
 
-export default class PickUpDate extends Component {
+class PickUpDate extends Component {
   //************************************** Constructor start*****************************//
   constructor(props){
     super(props);
 
     self= this;
-    this.state = {
-      //searchText:''
-    }
+      this.state = {
+          searchText:''
+      };
+      this.setDropOffLocation = this.setDropOffLocation.bind(this);
 
   }
+
+    setDropOffLocation(location){
+        console.log('searchText: ', this.state.searchText);
+        this.props.actions.setShipmentSearchQuery(this.props.shipments.searchQuery.cityState, location);
+        this.props.navigation.navigate('PickUpDate');
+    }
 
 
   render(){
@@ -65,3 +79,22 @@ export default class PickUpDate extends Component {
   }
   //************************************** Render end*****************************//
 };
+
+/* Map state to props */
+function mapStateToProps(state){
+    return {
+        shipments: state.shipments,
+    }
+}
+
+/* Map Actions to Props */
+function mapDispatchToProps(dispatch) {
+    return {
+        actions: bindActionCreators({
+            setShipmentSearchQuery
+        }, dispatch)
+    };
+}
+
+/* Connect Component with Redux */
+export default connect(mapStateToProps, mapDispatchToProps)(PickUpDate)

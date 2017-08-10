@@ -4,11 +4,15 @@ import styles from './styles';
 import images from './../../config/images.js';
 import commonStyle from './../../config/commonStyle.js';
 import common from './../../config/common.js';
+import { connect } from  'react-redux';
+import {bindActionCreators} from 'redux';
+import { getUserDetails,signUpRequest } from './../../actions/auth';
+import { AsyncStorage } from 'react-native';
 
 let self;
 let window = Dimensions.get("window");
 
-export default class SignupPending extends Component {
+class SignupPending extends Component {
   //************************************** Constructor start*****************************//
   constructor(props){
     super(props);
@@ -19,6 +23,19 @@ export default class SignupPending extends Component {
 
   }
 
+onverifyOTP = () => {
+  // let data = {
+  //   OTPCode:"aaaa",
+  // };
+    let token = AsyncStorage.getItem('@Axle:token')  
+    console.log("TOKEN", token)
+      // (this.props.actions.loginRequest(data))
+      let response = self.props.actions.getUserDetails(token);
+         if(response)
+              self.props.navigation.navigate('Otp')
+          }
+
+ 
   render(){
     const { navigate, goBack } = this.props.navigation;
     return (
@@ -46,11 +63,11 @@ export default class SignupPending extends Component {
           source={images.Axle_NoTires}
           />
           <View style={{marginTop : 15,marginHorizontal :10}}>
-            <Text style={[commonStyle.fontSize_20,{textAlign : 'center'}]}>Thank you for signing up with Axle. Our support team will contact you via email within 48 hours.</Text>
+            <Text style={[commonStyle.fontSize_20,{textAlign : 'center'}]}>Thank you for signing up with Axle. Please verify with the code we have sent to your mobile</Text>
           </View>
         </View>
 
-          <TouchableHighlight onPress={() => navigate('PickUpResult')} underlayColor={common.tuchableUnderlayGreenColor} style={[styles.btnLogin,commonStyle.contentCenter,{backgroundColor:common.greenColor,position : 'absolute', bottom : 20}]}>
+          <TouchableHighlight onPress={() => this.onverifyOTP()} underlayColor={common.tuchableUnderlayGreenColor} style={[styles.btnLogin,commonStyle.contentCenter,{backgroundColor:common.greenColor,position : 'absolute', bottom : 20}]}>
             <Text style={[commonStyle.fontSize_14,styles.fontProximaNovaBold]}>REFRESH STATUS</Text>
           </TouchableHighlight>
 
@@ -62,3 +79,24 @@ export default class SignupPending extends Component {
   }
   //************************************** Render end*****************************//
 };
+
+function mapStateToProps(state){
+    console.log("STATE", state.auth.token)
+    return {
+        auth: state.auth,
+        token: state.auth.token,
+        data: state.LoginReducer
+    }
+}
+
+/* Map Actions to Props */
+function mapDispatchToProps(dispatch) {
+    return {
+        actions: bindActionCreators({
+            getUserDetails
+            
+        }, dispatch)
+    };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(SignupPending)

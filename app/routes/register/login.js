@@ -1,14 +1,20 @@
 import React , { Component }from 'react';
-import { Text, View, TouchableHighlight, Image, TextInput,Dimensions } from 'react-native';
+import { Text, View, TouchableHighlight, Image, TextInput,Dimensions} from 'react-native';
 import styles from './styles';
 import images from './../../config/images.js';
 import commonStyle from './../../config/commonStyle.js';
 import common from './../../config/common.js';
 
+import { connect } from  'react-redux';
+import {bindActionCreators} from 'redux';
+import config from './../../config/config';
+
+/* Actions */
+import { loginRequest } from './../../actions/auth';
 
 let self;
 let window = Dimensions.get("window");
-export default class Login extends Component {
+class Login extends Component {
   //************************************** Constructor start*****************************//
   constructor(props){
     super(props);
@@ -21,6 +27,7 @@ export default class Login extends Component {
     }
     this.mobileNumberTextInput = this.mobileNumberTextInput.bind(this);
     this.passwordTextInput = this.passwordTextInput.bind(this);
+    this.onLogin = this.onLogin.bind(this);
 
   }
   mobileNumberTextInput(value){
@@ -42,6 +49,25 @@ export default class Login extends Component {
   passwordTextInput(password){
     this.setState({ password : password })
   }
+  onLogin(){
+    let data = {
+          mobile: this.state.mobile.replace(/[- )(]/g,'', ''),
+          password: this.state.password,
+          deviceType: config.DEVICE_TYPE,
+          role: "driver",
+          // temporary till testing
+          flushPreviousSessions: true
+      };
+      (this.props.actions.loginRequest(data))
+          .then(function(){
+              self.props.navigation.navigate('PickUpHome')
+          })
+          .catch(function(){
+              // TODO: any processing
+          })
+
+  }
+
   render(){
     const { navigate, goBack } = this.props.navigation;
     return (
@@ -107,7 +133,7 @@ export default class Login extends Component {
                   </View>
                   {
                     this.state.mobile !='' &&  this.state.password != ''
-                    ?<TouchableHighlight onPress={() => navigate('PickUpHome')} underlayColor={common.tuchableUnderlayGreenColor} style={[styles.btnLogin,commonStyle.contentCenter,{backgroundColor:common.greenColor,marginTop:20}]}>
+                    ?<TouchableHighlight onPress={() => this.onLogin() } underlayColor={common.tuchableUnderlayGreenColor} style={[styles.btnLogin,commonStyle.contentCenter,{backgroundColor:common.greenColor,marginTop:20}]}>
                       <Text style={[commonStyle.fontSize_14,styles.fontProximaNovaBold]}>LOGIN</Text>
                     </TouchableHighlight>
                     :<TouchableHighlight underlayColor={common.tuchableUnderlayGrayColor} style={[styles.btnLogin,commonStyle.contentCenter,{backgroundColor:common.grayColor,marginTop:20}]}>
@@ -122,12 +148,36 @@ export default class Login extends Component {
                     <Text style={[commonStyle.fontSize_14,styles.fontProximaNovaBold,{color:common.blackColor}]}>Forgot your Password?</Text>
                   </TouchableHighlight>
 
-                  <TouchableHighlight underlayColor="transparent" onPress={() => navigate('SignUp')} style={[commonStyle.contentCenter,{bottom:34}]}>
-                    <Text style={[commonStyle.fontSize_14,{color:common.blackColor,fontWeight : 'normal'}]}>Don’t have an account? Sign up here</Text>
-                  </TouchableHighlight>
+                {
+                    (this.props.auth.isOwner)?(
+                        <TouchableHighlight underlayColor="transparent" onPress={() => navigate('SignUp')} style={[commonStyle.contentCenter,{bottom:34}]}>
+                            <Text style={[commonStyle.fontSize_14,{color:common.blackColor,fontWeight : 'normal'}]}>Don’t have an account? Sign up here</Text>
+                        </TouchableHighlight>
+                    ):null
+                }
+
             </View>
       </View>
     )
   }
   //************************************** Render end*****************************//
 };
+
+/* Map state to props */
+function mapStateToProps(state){
+    return {
+        auth: state.auth,
+    }
+}
+
+/* Map Actions to Props */
+function mapDispatchToProps(dispatch) {
+    return {
+        actions: bindActionCreators({
+            loginRequest
+        }, dispatch)
+    };
+}
+
+/* Connect Component with Redux */
+export default connect(mapStateToProps, mapDispatchToProps)(Login)

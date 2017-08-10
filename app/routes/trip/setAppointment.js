@@ -6,7 +6,7 @@ import commonStyle from './../../config/commonStyle.js';
 import common from './../../config/common.js';
 import TripOverviewFullView from './../../components/tripOverviewFullView/tripOverviewFullView.js';
 import MessageView from './../../components/messageView/messageView.js';
-import { Components } from 'expo';
+// import { Components } from 'expo';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 
 

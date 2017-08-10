@@ -5,7 +5,7 @@ import images from './../../config/images.js';
 import commonStyle from './../../config/commonStyle.js';
 import common from './../../config/common.js';
 import TripDetailsView from './../../components/tripDetailsView/tripDetailsView.js';
-import { Components } from 'expo';
+// import { Components } from 'expo';
 
 let self;
 let window = Dimensions.get("window");

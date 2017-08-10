@@ -6,7 +6,7 @@ import {
   Image
 } from 'react-native';
 import { TabNavigator } from 'react-navigation';
-import { FontAwesome } from '@expo/vector-icons';
+// import { FontAwesome } from '@expo/vector-icons';
 import Hr from 'react-native-hr';
 
 

@@ -4,11 +4,15 @@ import styles from './styles';
 import images from './../../config/images.js';
 import commonStyle from './../../config/commonStyle.js';
 import common from './../../config/common.js';
+import { AsyncStorage } from 'react-native';
+import { otpRequest } from './../../actions/auth';
+import {bindActionCreators} from 'redux';
+import { connect } from  'react-redux';
 
 let self;
 let window = Dimensions.get("window");
 
-export default class Otp extends Component {
+class Otp extends Component {
   //************************************** Constructor start*****************************//
   constructor(props){
     super(props);
@@ -18,7 +22,7 @@ export default class Otp extends Component {
       second : '',
       third : '',
       fourth : '',
-      fifth : ''
+      // fifth : ''
     }
 
   }
@@ -37,28 +41,50 @@ export default class Otp extends Component {
   }
   fourthInput(fourth){
     this.setState({fourth});
-    this.refs.fifth.focus()
+    // this.refs.fifth.focus()
   }
-  fifthInput(fifth){
-    this.setState({fifth});
-    Keyboard.dismiss()
-    // this.refs.second.focus()
-  }
+  // fifthInput(fifth){
+  //   this.setState({fifth});
+  //   Keyboard.dismiss()
+  //   // this.refs.second.focus()
+  // }
 
   firstInputFocus(){
-    this.setState({first : '', second : '',third : '',fourth : '',fifth : ''});
+    this.setState({first : '', second : '',third : '',fourth : ''});
   }
   secondInputFocus(){
-    this.setState({second : '',third : '',fourth : '',fifth : ''});
+    this.setState({second : '',third : '',fourth : ''});
   }
   thirdInputFocus(){
-    this.setState({third : '',fourth : '',fifth : ''});
+    this.setState({third : '',fourth : ''});
   }
   fourthInputFocus(){
-    this.setState({fourth : '',fifth : ''});
+    this.setState({fourth : ''});
   }
-  fifthInputFocus(){
-    this.setState({fifth : ''});
+  // fifthInputFocus(){
+  //   this.setState({fifth : ''});
+  // }
+
+  onFinish = () => {
+    let data = {
+      OTPCode:this.state.first+this.state.second+this.state.third+this.state.fourth
+    };
+    console.log("OTP", data.OTPCode)
+     AsyncStorage.getItem('@Axle:token')
+      .then((value) => {
+          if(value)
+            {
+               (this.props.actions.otpRequest(data, value))
+                .then(function(){
+                    self.props.navigation.navigate('SignupPending')
+                })
+                .catch(function(){
+                    // TODO: any processing
+                }) 
+             
+            }
+      })
+        // navigate('SignupPending')
   }
 
   render(){
@@ -137,7 +163,7 @@ export default class Otp extends Component {
                         onFocus = {() => this.fourthInputFocus()}
                       />
                   </View>
-                      <View style={styles.otpView}>
+                      {/* <View style={styles.otpView}>
                         <TextInput
                           style={[{height : 40,width : 40},commonStyle.fontSize_36,{fontFamily:'ProximaNova-Bold',fontWeight :'bold',textAlign : 'center'}]}
                           onChangeText={(fifth) => this.fifthInput(fifth)}
@@ -148,13 +174,13 @@ export default class Otp extends Component {
                           underlineColorAndroid="transparent"
                           onFocus = {() => this.fifthInputFocus()}
                         />
-                  </View>
+                  </View> */}
               </View>
             </View>
 
               {
-                fifth != ''
-                ?<TouchableHighlight onPress={() => navigate('SignupPending')} underlayColor={common.tuchableUnderlayGreenColor} style={[styles.btnLogin,commonStyle.contentCenter,{backgroundColor:common.greenColor,position : 'absolute', bottom : 20}]}>
+                fourth != ''
+                ?<TouchableHighlight onPress={() => this.onFinish()} underlayColor={common.tuchableUnderlayGreenColor} style={[styles.btnLogin,commonStyle.contentCenter,{backgroundColor:common.greenColor,position : 'absolute', bottom : 20}]}>
                   <Text style={[commonStyle.fontSize_14,styles.fontProximaNovaBold]}>FINISH</Text>
                 </TouchableHighlight>
                 :<TouchableHighlight underlayColor={common.tuchableUnderlayGrayColor} style={[styles.btnLogin,commonStyle.contentCenter,{backgroundColor:common.grayColor,position : 'absolute', bottom : 20}]}>
@@ -171,3 +197,24 @@ export default class Otp extends Component {
   }
   //************************************** Render end*****************************//
 };
+
+function mapStateToProps(state){
+    console.log("STATE", state.auth.token)
+    return {
+        auth: state.auth,
+        token: state.auth.token,
+        data: state.LoginReducer
+    }
+}
+
+/* Map Actions to Props */
+function mapDispatchToProps(dispatch) {
+    return {
+        actions: bindActionCreators({
+            otpRequest
+            
+        }, dispatch)
+    };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Otp)

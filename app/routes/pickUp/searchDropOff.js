@@ -5,20 +5,31 @@ import images from './../../config/images.js';
 import commonStyle from './../../config/commonStyle.js';
 import common from './../../config/common.js';
 
+import { connect } from  'react-redux';
+import {bindActionCreators} from 'redux';
+
+/* Actions */
+import { setShipmentSearchQuery } from './../../actions/shipments';
+
 let self;
 
-export default class SearchDropOff extends Component {
+class SearchDropOff extends Component {
   //************************************** Constructor start*****************************//
   constructor(props){
     super(props);
 
     self= this;
     this.state = {
-      //searchText:''
-    }
+      searchText:''
+    };
+      this.setDropOffLocation = this.setDropOffLocation.bind(this);
 
   }
-
+    setDropOffLocation(location){
+        console.log('searchText: ', this.state.searchText);
+        this.props.actions.setShipmentSearchQuery(this.props.shipments.searchQuery.cityState, location);
+        this.props.navigation.navigate('PickUpDate');
+    }
 
   render(){
     const { navigate,goBack } = this.props.navigation;
@@ -53,31 +64,31 @@ export default class SearchDropOff extends Component {
             </View>
       </View>
       <View style={{height:70,borderBottomWidth:1,borderBottomColor:common.grayColor}}>
-          <TouchableHighlight underlayColor="transparent" onPress={() => navigate('PickUpDate')}  style={{marginTop:10,marginBottom:10}}>
+          <TouchableHighlight underlayColor="transparent" onPress={this.setDropOffLocation(null)}  style={{marginTop:10,marginBottom:10}}>
             <Text style={[commonStyle.fontSize_16,styles.fontMullerRegular,{lineHeight:50,paddingLeft:35}]}>Anywhere</Text>
           </TouchableHighlight>
       </View>
 
       <View style={commonStyle.subContainer}>
         <View style={{marginTop:25}}>
-          <TouchableHighlight style={{marginBottom:11}} underlayColor="transparent" onPress={() => navigate('PickUpDate')} >
-            <Text style={[commonStyle.fontSize_16,styles.fontMullerRegular,{lineHeight:50,color:common.grayTextColor,paddingLeft:15}]}>City name,State Initial</Text>
+          <TouchableHighlight style={{marginBottom:11}} underlayColor="transparent" onPress={this.setDropOffLocation(this.state.searchText)} >
+            <Text style={[commonStyle.fontSize_16,styles.fontMullerRegular,{lineHeight:50,color:common.grayTextColor,paddingLeft:15}]}>Select Above Location</Text>
           </TouchableHighlight>
-          <TouchableHighlight style={{marginBottom:10}} underlayColor="transparent" onPress={() => navigate('PickUpDate')} >
-            <Text style={[commonStyle.fontSize_16,styles.fontMullerRegular,{lineHeight:50,color:common.grayTextColor,paddingLeft:15}]}>City name,State Initial</Text>
-          </TouchableHighlight>
-          <TouchableHighlight style={{marginBottom:10}} underlayColor="transparent" onPress={() => navigate('PickUpDate')} >
-            <Text style={[commonStyle.fontSize_16,styles.fontMullerRegular,{lineHeight:50,color:common.grayTextColor,paddingLeft:15}]}>City name,State Initial</Text>
-          </TouchableHighlight>
-          <TouchableHighlight style={{marginBottom:10}} underlayColor="transparent" onPress={() => navigate('PickUpDate')} >
-            <Text style={[commonStyle.fontSize_16,styles.fontMullerRegular,{lineHeight:50,color:common.grayTextColor,paddingLeft:15}]}>City name,State Initial</Text>
-          </TouchableHighlight>
-          <TouchableHighlight style={{marginBottom:10}} underlayColor="transparent" onPress={() => navigate('PickUpDate')} >
-            <Text style={[commonStyle.fontSize_16,styles.fontMullerRegular,{lineHeight:50,color:common.grayTextColor,paddingLeft:15}]}>City name,State Initial</Text>
-          </TouchableHighlight>
-          <TouchableHighlight style={{marginBottom:10}} underlayColor="transparent" onPress={() => navigate('PickUpDate')} >
-            <Text style={[commonStyle.fontSize_16,styles.fontMullerRegular,{lineHeight:50,color:common.grayTextColor,paddingLeft:15}]}>City name,State Initial</Text>
-          </TouchableHighlight>
+          {/*<TouchableHighlight style={{marginBottom:10}} underlayColor="transparent" onPress={() => navigate('PickUpDate')} >*/}
+            {/*<Text style={[commonStyle.fontSize_16,styles.fontMullerRegular,{lineHeight:50,color:common.grayTextColor,paddingLeft:15}]}>City name,State Initial</Text>*/}
+          {/*</TouchableHighlight>*/}
+          {/*<TouchableHighlight style={{marginBottom:10}} underlayColor="transparent" onPress={() => navigate('PickUpDate')} >*/}
+            {/*<Text style={[commonStyle.fontSize_16,styles.fontMullerRegular,{lineHeight:50,color:common.grayTextColor,paddingLeft:15}]}>City name,State Initial</Text>*/}
+          {/*</TouchableHighlight>*/}
+          {/*<TouchableHighlight style={{marginBottom:10}} underlayColor="transparent" onPress={() => navigate('PickUpDate')} >*/}
+            {/*<Text style={[commonStyle.fontSize_16,styles.fontMullerRegular,{lineHeight:50,color:common.grayTextColor,paddingLeft:15}]}>City name,State Initial</Text>*/}
+          {/*</TouchableHighlight>*/}
+          {/*<TouchableHighlight style={{marginBottom:10}} underlayColor="transparent" onPress={() => navigate('PickUpDate')} >*/}
+            {/*<Text style={[commonStyle.fontSize_16,styles.fontMullerRegular,{lineHeight:50,color:common.grayTextColor,paddingLeft:15}]}>City name,State Initial</Text>*/}
+          {/*</TouchableHighlight>*/}
+          {/*<TouchableHighlight style={{marginBottom:10}} underlayColor="transparent" onPress={() => navigate('PickUpDate')} >*/}
+            {/*<Text style={[commonStyle.fontSize_16,styles.fontMullerRegular,{lineHeight:50,color:common.grayTextColor,paddingLeft:15}]}>City name,State Initial</Text>*/}
+          {/*</TouchableHighlight>*/}
 
         </View>
       </View>
@@ -88,3 +99,22 @@ export default class SearchDropOff extends Component {
   }
   //************************************** Render end*****************************//
 };
+
+/* Map state to props */
+function mapStateToProps(state){
+    return {
+        shipments: state.shipments,
+    }
+}
+
+/* Map Actions to Props */
+function mapDispatchToProps(dispatch) {
+    return {
+        actions: bindActionCreators({
+            setShipmentSearchQuery
+        }, dispatch)
+    };
+}
+
+/* Connect Component with Redux */
+export default connect(mapStateToProps, mapDispatchToProps)(SearchDropOff)

@@ -13,7 +13,8 @@ import {
 } from 'react-native';
 
 import images from './../../config/images';
-import { FontAwesome, EvilIcons } from '@expo/vector-icons';
+// import { FontAwesome, EvilIcons } from '@expo/vector-icons';
+import EvilIcon from 'react-native-vector-icons/EvilIcons'
 
 import { getSize} from './../../layouts/common/RatioCalculator/ratio';
 let window = Dimensions.get("window");
@@ -22,10 +23,19 @@ export default class DocType extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      doc: 'Document Type'
+      doc: 'Document Type',
+      modalVisible: false
     }
   }
+
+  openModal = (visible) => {
+    this.setState({
+      modalVisible: visible
+    });
+  }
+
   render() {
+    const { navigate } = this.props.navigation;
     return(
       <View style={s.Container}>
         <StatusBar
@@ -38,7 +48,7 @@ export default class DocType extends Component {
               <Text style={s.HeaderText}>Your trip is Complete</Text>
             </View>
             <View style={s.Icon}>
-              <EvilIcons name="check" color="#A5DB03" size={getSize(28)}/>
+              <EvilIcon name="check" color="#A5DB03" size={getSize(28)}/>
             </View>
           </View>
         </View>
@@ -61,7 +71,7 @@ export default class DocType extends Component {
                       style={s.dottedLineImage}
                     />
                   </View>
-                  <FontAwesome name="map-marker"  size={18} color="#A5DB03" style={{marginTop: getSize(6)}}/>
+                  {/* <FontAwesome name="map-marker"  size={18} color="#A5DB03" style={{marginTop: getSize(6)}}/> */}
               </View>
               <View style={{ flex:5}}>
                 <View style={{paddingTop: getSize(24)}}>
@@ -83,19 +93,23 @@ export default class DocType extends Component {
           <View style={s.Hr}/>
           <View style={s.UploadSection}>
               <Text style={{fontSize: getSize(12),fontFamily: 'ProximaNova-Bold', fontWeight: 'bold'}}>UPLOAD NECESSARY DOCUMENTS</Text>
-
+          <TouchableHighlight onPress={() => navigate('DocScan')}>
             <View style={{height:getSize(44), paddingTop: getSize(10)}}>
-                <EvilIcons name="camera"  color="#D1D3D4" size={30} style={{position: 'absolute', marginLeft: getSize(290), marginTop:getSize(20),zIndex:1, width:getSize(40)}}/>
-                <TextInput style={{paddingLeft:getSize(14),borderWidth: 1.5, height:getSize(44), borderColor: '#D1D3D4', placeholderTextColor: '#D1D3D4'}} placeholder="Scan Proof Of Delivery (POD)*"/>
+                <EvilIcon name="camera"  color="#D1D3D4" size={30} style={{position: 'absolute', marginLeft: getSize(290), marginTop:getSize(20),zIndex:1, width:getSize(40)}}/>
+               <Text style={{paddingLeft:getSize(14),borderWidth: 1, height:getSize(44), borderColor: '#D1D3D4', color:'#B8BBC4', paddingVertical:12, fontSize:18}}>Scan Proof Of Delivery (POD)*</Text>       
             </View>
-
+          </TouchableHighlight>
           </View>
           <View style={s.Hr}/>
-
+          <TouchableHighlight onPress={() => this.openModal(true)} underlayColor='transparent' style={{margin:getSize(20), height:getSize(44), paddingTop: getSize(5)}}>                    
+            <Text style={{paddingLeft:getSize(14),borderWidth: 1, height:getSize(44), borderColor: '#D1D3D4', color:'#B8BBC4', paddingVertical:12, fontSize:18}}>Select a document type to scan</Text>                      
+          </TouchableHighlight>   
         </View>
         <Modal
           animationType={'none'}
           transparent={true}
+          visible={this.state.modalVisible}
+          onRequestClose={() => {console.log('closed')}}
           >
           <View  style={{flex:1,backgroundColor:'rgba(0,0,0,0.5)'}} >
             <View  style={s.ModalContainer}>

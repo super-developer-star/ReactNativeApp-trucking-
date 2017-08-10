@@ -56,12 +56,12 @@ export default class TripDetailsView extends Component {
         </View>
         <View>
           <View>
-            <Text style={[commonStyle.fontSize_18,{marginTop :3}]}>{dataTripDetails.source}</Text>
-            <Text style={[commonStyle.fontSize_14,{fontWeight : 'normal', color : '#58595B'}]}>{dataTripDetails.startDate}</Text>
+            <Text style={[commonStyle.fontSize_18,{marginTop :3}]}>{dataTripDetails.pickupCity + ', ' + dataTripDetails.pickupState}</Text>
+            <Text style={[commonStyle.fontSize_14,{fontWeight : 'normal', color : '#58595B'}]}>{new Date(dataTripDetails.pickupDateTimeFrom).toLocaleString()}</Text>
           </View>
           <View style={{marginTop :15}}>
-            <Text style={[commonStyle.fontSize_18,{marginTop :3}]}>{dataTripDetails.destination}</Text>
-            <Text style={[commonStyle.fontSize_14,{fontWeight : 'normal', color : '#58595B'}]}>{dataTripDetails.endDate}</Text>
+            <Text style={[commonStyle.fontSize_18,{marginTop :3}]}>{dataTripDetails.deliveryCity + ', ' + dataTripDetails.deliveryState}</Text>
+            <Text style={[commonStyle.fontSize_14,{fontWeight : 'normal', color : '#58595B'}]}>{new Date(dataTripDetails.deliveryDateTimeTo).toLocaleString()}</Text>
           </View>
         </View>
       </View>
@@ -69,43 +69,43 @@ export default class TripDetailsView extends Component {
      <View style={{marginTop :20,borderTopWidth : 1, borderTopColor : common.grayColor}}>
         <View style={{flexDirection : 'row',marginTop :25,paddingLeft : 30}}>
             <View style={{flex:1}}>
-              <Text style={[commonStyle.fontSize_12]}>{dataTripDetails.deadheadKey}</Text>
-              <Text style={[commonStyle.fontSize_14,{fontWeight : 'normal', color : '#58595B'}]}>{dataTripDetails.deadheadValue}</Text>
+              <Text style={[commonStyle.fontSize_12]}>{'DEADHEAD'}</Text>
+              <Text style={[commonStyle.fontSize_14,{fontWeight : 'normal', color : '#58595B'}]}>{dataTripDetails.deadhead || 0}</Text>
             </View>
             <View style={{flex:1}}>
-            <Text style={[commonStyle.fontSize_12,]}>{dataTripDetails.priceKey}</Text>
-            <Text style={[commonStyle.fontSize_14,{fontWeight : 'normal', color : '#58595B'}]}>{dataTripDetails.priceValue}</Text>
+            <Text style={[commonStyle.fontSize_12,]}>{'PRICE'}</Text>
+            <Text style={[commonStyle.fontSize_14,{fontWeight : 'normal', color : '#58595B'}]}>{dataTripDetails.lowPrice}</Text>
             </View>
             <View style={{flex:1}}>
-            <Text style={[commonStyle.fontSize_12]}>{dataTripDetails.distanceKey}</Text>
-            <Text style={[commonStyle.fontSize_14,{fontWeight : 'normal', color : '#58595B'}]}>{dataTripDetails.distanceValue}</Text>
+            <Text style={[commonStyle.fontSize_12]}>{'DISTANCE'}</Text>
+            <Text style={[commonStyle.fontSize_14,{fontWeight : 'normal', color : '#58595B'}]}>{dataTripDetails.distance + 'mi'}</Text>
             </View>
         </View>
 
         <View style={{flexDirection : 'row',marginTop :15,paddingLeft : 30}}>
             <View style={{flex:1}}>
-              <Text style={[commonStyle.fontSize_12]}>{dataTripDetails.commodityKey}</Text>
-              <Text style={[commonStyle.fontSize_14,{fontWeight : 'normal', color : '#58595B'}]}>{dataTripDetails.commodityValue}</Text>
+              <Text style={[commonStyle.fontSize_12]}>{'COMMODITY'}</Text>
+              <Text style={[commonStyle.fontSize_14,{fontWeight : 'normal', color : '#58595B'}]}>{dataTripDetails.loadingDetails.commodity}</Text>
             </View>
             <View style={{flex:1}}>
-            <Text style={[commonStyle.fontSize_12,]}>{dataTripDetails.referenceKey}</Text>
-            <Text style={[commonStyle.fontSize_14,{fontWeight : 'normal', color : '#58595B'}]}>{dataTripDetails.referenceValue}</Text>
+            <Text style={[commonStyle.fontSize_12,]}>{'REFERENCE #'}</Text>
+            <Text style={[commonStyle.fontSize_14,{fontWeight : 'normal', color : '#58595B'}]}>{dataTripDetails.referenceValue || 'NA'}</Text>
             </View>
             <View style={{flex:1}}>
             </View>
         </View>
         <View style={{flexDirection : 'row',marginTop :15,paddingLeft : 30}}>
             <View style={{flex:1}}>
-              <Text style={[commonStyle.fontSize_12]}>{dataTripDetails.wightKey}</Text>
-              <Text style={[commonStyle.fontSize_14,{fontWeight : 'normal', color : '#58595B'}]}>{dataTripDetails.wightValue}</Text>
+              <Text style={[commonStyle.fontSize_12]}>{'WEIGHT'}</Text>
+              <Text style={[commonStyle.fontSize_14,{fontWeight : 'normal', color : '#58595B'}]}>{dataTripDetails.loadingDetails.weight}</Text>
             </View>
             <View style={{flex:1}}>
-            <Text style={[commonStyle.fontSize_12,]}>{dataTripDetails.palletsKey}</Text>
-            <Text style={[commonStyle.fontSize_14,{fontWeight : 'normal', color : '#58595B'}]}>{dataTripDetails.palletsValue}</Text>
+            <Text style={[commonStyle.fontSize_12,]}>{'PALLETS'}</Text>
+            <Text style={[commonStyle.fontSize_14,{fontWeight : 'normal', color : '#58595B'}]}>{dataTripDetails.loadingDetails.pallets}</Text>
             </View>
             <View style={{flex:1}}>
-            <Text style={[commonStyle.fontSize_12]}>{dataTripDetails.trailerKey}</Text>
-            <Text style={[commonStyle.fontSize_14,{fontWeight : 'normal', color : '#58595B'}]}>{dataTripDetails.trailerValue}</Text>
+            <Text style={[commonStyle.fontSize_12]}>{'TRAILER'}</Text>
+            <Text style={[commonStyle.fontSize_14,{fontWeight : 'normal', color : '#58595B'}]}>{dataTripDetails.truckType}</Text>
             </View>
         </View>
       </View>

@@ -4,11 +4,16 @@ import styles from './styles';
 import images from './../../config/images.js';
 import commonStyle from './../../config/commonStyle.js';
 import common from './../../config/common.js';
+import { connect } from  'react-redux';
+import {bindActionCreators} from 'redux';
+
+
+import { getResetPasswordToken } from './../../actions/auth';
 
 let self;
 let window = Dimensions.get("window");
 
-export default class ForgotPassword extends Component {
+class ForgotPassword extends Component {
   //************************************** Constructor start*****************************//
   constructor(props){
     super(props);
@@ -16,6 +21,8 @@ export default class ForgotPassword extends Component {
     this.state = {
       forgotEmail : '',
       forgotEmailValid: false,
+      phone: '',
+      phoneValid: false,
     }
 
   }
@@ -30,9 +37,36 @@ export default class ForgotPassword extends Component {
     }
   }
 
+  phoneTextInput(phone){
+    this.setState({ phone : phone })
+    if(phone != ''){
+      this.setState({ phoneValid : true})
+    }else{
+      this.setState({ phoneValid : false})
+    }
+  }
+
+  onResetPassWord = () => {
+      let prefix = this.state.phone.split(" ")[0]
+      let num = this.state.phone.split(" ")[1]
+      console.log("prefix", prefix);
+      console.log("num", num);
+      let query = {prefix, num}
+       console.log("query", query);
+      (this.props.actions.getResetPasswordToken(query))
+          .then(response => {
+              console.log("aaa", response);
+              self.props.navigation.navigate('NewPassword')
+          })
+          .catch(function(){
+              // TODO: any processing
+          })
+
+  }
+
   render(){
     const { navigate, goBack } = this.props.navigation;
-    const { forgotEmail, forgotEmailValid } = this.state;
+    const { forgotEmail, forgotEmailValid, phone, phoneValid } = this.state;
     return (
       <View style={commonStyle.container}>
       <View style={[commonStyle.headerBarHeight90,commonStyle.contentCenter,{backgroundColor:common.blackColor,flexDirection : 'row'}]}>
@@ -59,9 +93,9 @@ export default class ForgotPassword extends Component {
               <View style={commonStyle.contentCenter}>
 
                 <TextInput
-                  onChangeText={(forgotEmail) => this.emailTextInput(forgotEmail)}
+                  onChangeText={(phone) => this.phoneTextInput(phone)}
                   underlineColorAndroid = "transparent"
-                  value={forgotEmail}
+                  value={phone}
                   placeholder= "Phone number or email address"
                   keyboardType = 'email-address'
                   style={[commonStyle.fontSize_16,styles.txtInutStyle,{width : window.width - 40,textAlign:'center'}]}
@@ -69,10 +103,10 @@ export default class ForgotPassword extends Component {
 
                 </View>
             </View>
-
+             
             {
-              forgotEmail != '' && forgotEmailValid == true
-              ?<TouchableHighlight onPress={() => navigate('NewPassword')} underlayColor={common.tuchableUnderlayGreenColor} style={[styles.btnLogin,commonStyle.contentCenter,{backgroundColor:common.greenColor,position : 'absolute', bottom : 20}]}>
+              phone != '' && phoneValid == true
+              ?<TouchableHighlight onPress={() => this.onResetPassWord()} underlayColor={common.tuchableUnderlayGreenColor} style={[styles.btnLogin,commonStyle.contentCenter,{backgroundColor:common.greenColor,position : 'absolute', bottom : 20}]}>
                 <Text style={[commonStyle.fontSize_14,styles.fontProximaNovaBold]}>CONTINUE</Text>
               </TouchableHighlight>
               :<TouchableHighlight underlayColor={common.tuchableUnderlayGrayColor} style={[styles.btnLogin,commonStyle.contentCenter,{backgroundColor:common.grayColor,position : 'absolute', bottom : 20}]}>
@@ -90,3 +124,22 @@ export default class ForgotPassword extends Component {
   }
   //************************************** Render end*****************************//
 };
+
+/* Map state to props */
+function mapStateToProps(state){
+    return {
+        auth: state.auth,
+    }
+}
+
+/* Map Actions to Props */
+function mapDispatchToProps(dispatch) {
+    return {
+        actions: bindActionCreators({
+            getResetPasswordToken
+        }, dispatch)
+    };
+}
+
+/* Connect Component with Redux */
+export default connect(mapStateToProps, mapDispatchToProps)(ForgotPassword)

@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "C:\\Users\\Augusto\\Documents\\axel-tracking\\react-mobile\\android\\app\\build\\intermediates\\res\\merged\\debug\\xml\\provider_paths.xml",
+        "source": "C:\\Users\\Augusto\\Documents\\axel-tracking\\react-mobile\\android\\app\\build\\intermediates\\exploded-aar\\axle\\react-native-image-picker\\unspecified\\res\\xml\\provider_paths.xml"
+    },
+    {
+        "merged": "C:\\Users\\Augusto\\Documents\\axel-tracking\\react-mobile\\android\\app\\build\\intermediates\\res\\merged\\debug\\xml\\preferences.xml",
+        "source": "C:\\Users\\Augusto\\Documents\\axel-tracking\\react-mobile\\android\\app\\build\\intermediates\\exploded-aar\\com.facebook.react\\react-native\\0.46.4\\res\\xml\\preferences.xml"
+    }
+]

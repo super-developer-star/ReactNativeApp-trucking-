@@ -44,7 +44,8 @@ export default images = {
   Check_Confirmation_Large : require('../assets/images/Check_Confirmation_Large.png'),
   Safety_Pin: require('../assets/images/Safety_Pin.png'),
   Camera: require('../assets/images/Camera.png'),
-  Doc: require('../assets/images/Doc.png')
+  Doc: require('../assets/images/Doc.png'),
   calendar_icon: require('../assets/images/calendar_icon.png'),
-  Arrow_Down: require('../assets/images/Arrow_Down.png')
+  Arrow_Down: require('../assets/images/Arrow_Down.png'),
+  Truck: require('../assets/images/truck.png')
 };

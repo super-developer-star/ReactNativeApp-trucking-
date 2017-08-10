@@ -9,21 +9,27 @@ import {
   Alert,
   Modal,
   Button,
-  TouchableHighlight
+  TouchableHighlight,
+    AsyncStorage
 } from 'react-native';
 import Hr from 'react-native-hr';
 let window = Dimensions.get("window");
 
-import { FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
+// import { FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
 
 import commonStyle from './../../config/commonStyle.js';
 import common from './../../config/common.js';
 import images from './../../config/images.js';
 import styles from './SideMenuStyle';
 
+
+let self;
+
 export default class SideMenu extends Component {
+
   constructor(props){
       super(props);
+        self = this;
       this.state = {
         logout: false,
         images: [
@@ -45,6 +51,14 @@ export default class SideMenu extends Component {
           }
         ]
       }
+      this.onLogout = this.onLogout.bind(this);
+  }
+
+  onLogout(){
+      AsyncStorage.removeItem('@Axle:token')
+          .then(function(){
+              self.props.navigate('PathSelection');
+          })
   }
 
   render() {
@@ -89,6 +103,7 @@ export default class SideMenu extends Component {
           <Modal
             animationType={'none'}
             transparent={true}
+            onRequestClose={()=>{}}
             >
             <View  style={{flex:1,backgroundColor:'rgba(0,0,0,0.5)'}} >
               <View  style={{height:130, backgroundColor: '#FFFFFF', bottom: 0, position: 'absolute', width:window.width}}>
@@ -102,7 +117,7 @@ export default class SideMenu extends Component {
                            <Text style={[commonStyle.fontSize_14,{fontFamily:'ProximaNova-Bold'}]}>NO</Text>
                          </TouchableHighlight>
 
-                         <TouchableHighlight onPress={() => {this.setState({logout: false})}}   underlayColor={common.tuchableUnderlayGreenColor} style={[commonStyle.contentCenter,{backgroundColor:common.greenColor,flex:0.5}]}>
+                         <TouchableHighlight onPress={() => {this.setState({logout: false}); this.onLogout()}}   underlayColor={common.tuchableUnderlayGreenColor} style={[commonStyle.contentCenter,{backgroundColor:common.greenColor,flex:0.5}]}>
                            <Text style={[commonStyle.fontSize_14,{fontFamily:'ProximaNova-Bold'}]}>YES</Text>
                          </TouchableHighlight>
                      </View>
